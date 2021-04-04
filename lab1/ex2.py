@@ -10,7 +10,7 @@ import numpy as np
 def convolve(image, kernel):
 
     # convolved image (both the x and y axis loose 2 pixels because we are not padding)
-    # we do can hardcode the dimensions because we know we are using a 3 × 3 kernel
+    # we can hardcode the dimensions because we know we are using a 3 × 3 kernel
     conv_img = np.zeros((image.shape[0]-2, image.shape[1]-2))
 
     # convolve image

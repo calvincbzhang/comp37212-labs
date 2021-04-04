@@ -30,7 +30,7 @@ def pad_convolve(image, kernel):
 def convolve(image, kernel):
 
     # convolved image (both the x and y axis loose 2 pixels because we are not padding)
-    # we do can hardcode the dimensions because we know we are using a 3 × 3 kernel
+    # we can hardcode the dimensions because we know we are using a 3 × 3 kernel
     conv_img = np.zeros((image.shape[0]-2, image.shape[1]-2))
 
     # convolve image
@@ -74,6 +74,14 @@ sobel_grad_img = np.sqrt(np.power(sobel_x_img, 2) + np.power(sobel_y_img, 2))
 sobel_grad_img = ((sobel_grad_img / np.max(sobel_grad_img)) * 255).astype('uint8')
 
 # image histograms
+hist = cv2.calcHist([wavg_img.astype('uint8')], [0], None, [256], [0, 256])
+hist = hist.reshape(256)
+plt.bar(np.linspace(0,255,256), hist)
+plt.title('Histogram for Weighted Average Image')
+plt.ylabel('Frequency')
+plt.xlabel('Grey Level')
+plt.show()
+
 hist = cv2.calcHist([prewitt_grad_img], [0], None, [256], [0, 256])
 hist = hist.reshape(256)
 plt.bar(np.linspace(0,255,256), hist)
@@ -85,13 +93,19 @@ plt.show()
 hist = cv2.calcHist([sobel_grad_img], [0], None, [256], [0, 256])
 hist = hist.reshape(256)
 plt.bar(np.linspace(0,255,256), hist)
-plt.title('Histogram for Prewitt Edge-Strength Image')
+plt.title('Histogram for Sobel Edge-Strength Image')
 plt.ylabel('Frequency')
 plt.xlabel('Grey Level')
 plt.show()
 
 # threshold the gradient magnitude
 threshold = 60
+
+wavg_thresh = np.zeros((wavg_img.shape[0], wavg_img.shape[1]))
+for y in range(wavg_img.shape[1]):
+    for x in range(wavg_img.shape[0]):
+        if wavg_img[x, y] > threshold:
+            wavg_thresh[x, y] = 255
 
 prewitt_thresh = np.zeros((prewitt_grad_img.shape[0], prewitt_grad_img.shape[1]))
 for y in range(prewitt_grad_img.shape[1]):
@@ -114,3 +128,4 @@ cv2.imwrite('wavg_prewitt_grad_' + filename, prewitt_grad_img)
 cv2.imwrite('wavg_sobel_grad_' + filename, sobel_grad_img)
 cv2.imwrite('wavg_prewitt_thresh_' + filename, prewitt_thresh)
 cv2.imwrite('wavg_sobel_thresh_' + filename, sobel_thresh)
+cv2.imwrite('wavg_thresh_' + filename, wavg_thresh)
