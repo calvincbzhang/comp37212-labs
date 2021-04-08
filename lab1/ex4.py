@@ -77,7 +77,7 @@ sobel_grad_img = ((sobel_grad_img / np.max(sobel_grad_img)) * 255).astype('uint8
 hist = cv2.calcHist([wavg_img.astype('uint8')], [0], None, [256], [0, 256])
 hist = hist.reshape(256)
 plt.bar(np.linspace(0,255,256), hist)
-plt.title('Histogram for Weighted Average Image')
+plt.title('Histogram for the Intensities in the Weighted Average Image')
 plt.ylabel('Frequency')
 plt.xlabel('Grey Level')
 plt.show()
