@@ -15,19 +15,7 @@ def show(img):
     # plt.show()
 
 
-def test(img):
-    # Initiate ORB detector
-    orb = cv2.ORB_create()
-    # find the keypoints with ORB
-    kp = orb.detect(img, None)
-    # compute the descriptors with ORB
-    kp, des = orb.compute(img, kp)
-    # draw only keypoints location, not size and orientation
-    img_kp = cv2.drawKeypoints(img, kp, None, color=(0,255,0), flags=0)
-    show(img_kp)
-
-
-def HarrisPointsDetector(img):
+def HarrisPointsDetector(img, thresh=0):
     # keep a copy of the original image
     original = img.copy()
     # if intermediary steps should be shown
@@ -36,11 +24,11 @@ def HarrisPointsDetector(img):
     keypoints = []
 
     # smooth image
-    img = cv2.GaussianBlur(img, (9,9), 3)
+    img = cv2.GaussianBlur(img, (5,5), 0.5)
 
     # calculate derivatives using Sobel operator
-    Ix = cv2.Sobel(img, -1, 1, 0, ksize=3, borderType=cv2.BORDER_REFLECT)
-    Iy = cv2.Sobel(img, -1, 0, 1, ksize=3, borderType=cv2.BORDER_REFLECT)
+    Ix = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3, borderType=cv2.BORDER_REFLECT)
+    Iy = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3, borderType=cv2.BORDER_REFLECT)
 
     if show_img:
         show(Ix)
@@ -77,10 +65,11 @@ def HarrisPointsDetector(img):
     if show_img:
         show(harris_img)
 
+    print(f'Max Harris Cornerness: {harris_img.max()}')
+    
     # select maxima (keypoints)
     max_img = ndimage.maximum_filter(harris_img, size=(7,7))
-    harris_img[harris_img < 255] = harris_img.min()-1
-    max_img = (harris_img == max_img).astype(np.uint8) * 255
+    max_img = ((harris_img == max_img) & (harris_img > thresh)).astype(np.uint8) * 255
 
     if show_img:
         show(max_img)
@@ -89,14 +78,14 @@ def HarrisPointsDetector(img):
     for y in range(max_img.shape[1]):
         for x in range(max_img.shape[0]):
             if max_img[x, y] > 0:
-                keypoints.append(cv2.KeyPoint(y, x, gradients[x, y]))
+                keypoints.append(cv2.KeyPoint(y, x, 31, gradients[x, y]))
                 
     img_kp = cv2.drawKeypoints(original, keypoints, None, color=(0,255,0), flags=0)
     
     if show_img:
         show(img_kp)
 
-    return keypoints
+    return keypoints, img_kp
 
 
 def featureDescriptor(img, kp):
@@ -116,7 +105,7 @@ def featureDescriptor(img, kp):
     show(img3)
     
     # FAST
-    orb.setScoreType(cv2.FAST_FEATURE_DETECTOR_TYPE_9_16)
+    orb.setScoreType(cv2.ORB_FAST_SCORE)
     kp_fast = orb.detect(img, None)
     kp_fast, des_fast = orb.compute(img, kp_fast)
     img4 = cv2.drawKeypoints(img, kp_fast, None, color=(0,255,0), flags=0)
@@ -128,7 +117,7 @@ def featureDescriptor(img, kp):
 def SSDFeatureMatcher(des1, des2):
     matches = []
 
-    distances = sp.spatial.distance.cdist(des1, des2, 'euclidean')
+    distances = spatial.distance.cdist(des1, des2, 'euclidean')
 
     for idx, list in enumerate(des1):
         # get minimum distance
@@ -146,7 +135,7 @@ def SSDFeatureMatcher(des1, des2):
 def RatioFeatureMatcher(des1, des2):
     matches = []
 
-    distances = sp.spatial.distance.cdist(des1, des2, 'euclidean')
+    distances = spatial.distance.cdist(des1, des2, 'euclidean')
 
     for idx, list in enumerate(des1):
         # sort by distance
@@ -185,16 +174,32 @@ if __name__ == '__main__':
         print('Error: failed to open', filename2)
         sys.exit()
 
-    keypoints = HarrisPointsDetector(img)
+    keypoints, img_kp = HarrisPointsDetector(img, 5e7)
     des, kp, des_harris, kp_harris, des_fast, kp_fast = featureDescriptor(img, keypoints)
 
-    keypoints2 = HarrisPointsDetector(img2)
+    keypoints2, img_kp2 = HarrisPointsDetector(img2, 5e7)
     des2, kp2, des_harris2, kp_harris2, des_fast2, kp_fast2 = featureDescriptor(img2, keypoints2)
+
+    ssd_matches = SSDFeatureMatcher(des, des2)
+    ssd_matches_img = cv2.drawMatches(img, kp, img2, kp2, ssd_matches, None)
+    show(ssd_matches_img)
 
     ssd_matches = SSDFeatureMatcher(des_harris, des_harris2)
     ssd_matches_img = cv2.drawMatches(img, kp_harris, img2, kp_harris2, ssd_matches, None)
     show(ssd_matches_img)
 
+    ssd_matches = SSDFeatureMatcher(des_fast, des_fast2)
+    ssd_matches_img = cv2.drawMatches(img, kp_fast, img2, kp_fast2, ssd_matches, None)
+    show(ssd_matches_img)
+
+    ratio_matches = RatioFeatureMatcher(des, des2)
+    ratio_matches_img = cv2.drawMatches(img, kp, img2, kp2, ratio_matches, None)
+    show(ratio_matches_img)
+
     ratio_matches = RatioFeatureMatcher(des_harris, des_harris2)
     ratio_matches_img = cv2.drawMatches(img, kp_harris, img2, kp_harris2, ratio_matches, None)
+    show(ratio_matches_img)
+
+    ratio_matches = RatioFeatureMatcher(des_fast, des_fast2)
+    ratio_matches_img = cv2.drawMatches(img, kp_fast, img2, kp_fast2, ratio_matches, None)
     show(ratio_matches_img)
