@@ -204,9 +204,9 @@ if __name__ == '__main__':
                 if gs is None:
                     break
     else:   # best bernie
-        best_gs = 3
-        best_sigma = 0.5
-        best_thresh = 5e6
+        best_gs = 5
+        best_sigma = 0
+        best_thresh = 1e7
 
         print(f'***** {bernie_noext} *****')
         log.info(f'***** {bernie_noext} *****')
@@ -244,9 +244,9 @@ if __name__ == '__main__':
         exit()
     else:   # best for others
         kp_others = []
-        best_gss = [3, 3, 3, 3, 5, 5, 3, 9, 3]
-        best_sigmas = [0.5, 0.5, 0.5, 0.5, 2, 2, 0.5, 2, 0]
-        best_threshs = [5e6, 5e8, 1e8, 1e2, 1e7, 5e6, 1e7, 1e5, 1e9]
+        best_gss = [5, 5, 9, 5, 5, 7, None, 5, 7]
+        best_sigmas = [0, 0.5, 2, 0, 2, 2, None, 0, 3]
+        best_threshs = [1e7, 1e9, 5e5, 1e2, 5e6, 1e6, 5e7, 1e7, 1e6]
 
         for i in range(len(filenames)):
             image_noext = os.path.splitext(filenames[i])[0]
