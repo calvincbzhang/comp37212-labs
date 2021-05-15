@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#########################################################################
+lab2/results/bernie180
+lab2/results/bernieBenefitBeautySalon
+lab2/results/BernieFriends
+lab2/results/bernieMoreblurred
+lab2/results/bernieNoisy2
+lab2/results/berniePixelated2
+lab2/results/bernieSanders
+lab2/results/bernieSchoolLunch
+lab2/results/brighterBernie
+lab2/results/darkerBernie
