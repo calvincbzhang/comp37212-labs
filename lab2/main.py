@@ -165,6 +165,7 @@ if __name__ == '__main__':
     img_path = './images/'
     res_path = './results/'
     find_params = 0
+    plot = 1
     logname = 'find_params' if find_params else 'matching'
 
     logfile = res_path + logname + '.log'
@@ -215,6 +216,19 @@ if __name__ == '__main__':
         log.info(f'Gaussian filter: ({best_gs}, {best_gs}) \t Sigma: {best_sigma} \t Threshold: {best_thresh}')
         kp_bernie, img_kp = HarrisPointsDetector(img, best_gs, best_sigma, best_thresh)
 
+        if plot:
+            num_kp = []
+            for t in thresholds:
+                print(f'Threshold: {t}')
+                keypoints, img_kp = HarrisPointsDetector(img, best_gs, best_sigma, t)
+                num_kp.append(len(keypoints))
+            plt.plot(thresholds, num_kp)
+            plt.xscale('log')
+            plt.xlabel('Threshold')
+            plt.ylabel('Keypoints')
+            plt.savefig(res_path + bernie)
+            plt.close()
+
     # all other images
     filenames = os.listdir(img_path)
     filenames.remove(bernie)
@@ -257,6 +271,19 @@ if __name__ == '__main__':
             log.info(f'Gaussian filter: ({best_gss[i]}, {best_gss[i]}) \t Sigma: {best_sigmas[i]} \t Threshold: {best_threshs[i]}')
             kp, img_kp = HarrisPointsDetector(imgs[i], best_gss[i], best_sigmas[i], best_threshs[i])
             kp_others.append(kp)
+
+            if plot:
+                num_kp = []
+                for t in thresholds:
+                    print(f'Threshold: {t}')
+                    keypoints, img_kp = HarrisPointsDetector(imgs[i], best_gss[i], best_sigmas[i], t)
+                    num_kp.append(len(keypoints))
+                plt.plot(thresholds, num_kp)
+                plt.xscale('log')
+                plt.xlabel('Threshold')
+                plt.ylabel('Keypoints')
+                plt.savefig(res_path + filenames[i])
+                plt.close()
 
     # best for each of the other images
 
