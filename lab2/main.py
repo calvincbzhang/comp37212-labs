@@ -102,20 +102,20 @@ def featureDescriptor(img, kp):
     kp, des = orb.compute(img, kp)
     # draw only keypoints location, not size and orientation
     img2 = cv2.drawKeypoints(img, kp, None, color=(0,255,0), flags=0)
-    show(img2)
+    # show(img2)
 
     # Harris
     kp_harris = orb.detect(img, None)
     kp_harris, des_harris = orb.compute(img, kp_harris)
     img3 = cv2.drawKeypoints(img, kp_harris, None, color=(0,255,0), flags=0)
-    show(img3)
+    # show(img3)
     
     # FAST
     orb.setScoreType(cv2.ORB_FAST_SCORE)
     kp_fast = orb.detect(img, None)
     kp_fast, des_fast = orb.compute(img, kp_fast)
     img4 = cv2.drawKeypoints(img, kp_fast, None, color=(0,255,0), flags=0)
-    show(img4)
+    # show(img4)
 
     return des, kp, img2, des_harris, kp_harris, img3, des_fast, kp_fast, img4
 
@@ -155,7 +155,8 @@ def RatioFeatureMatcher(des1, des2):
         match.trainIdx = int(sorted_idx[0])
         ratio = best_match / float(second_best)
         match.distance = ratio
-        matches.append(match)
+        if match.distance < 0.9:
+            matches.append(match)
 
     return matches
 
@@ -165,7 +166,7 @@ if __name__ == '__main__':
     img_path = './images/'
     res_path = './results/'
     find_params = 0
-    plot = 1
+    plot = 0
     logname = 'find_params' if find_params else 'matching'
 
     logfile = res_path + logname + '.log'
@@ -173,6 +174,7 @@ if __name__ == '__main__':
                     level=log.DEBUG,
                     format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
+    log.getLogger('matplotlib.font_manager').disabled = True
 
     # Gaussian filters to test
     gauss_sizes = [None, 3, 5, 7, 9, 11]
