@@ -96,6 +96,6 @@ for y in range(sobel_grad_img.shape[1]):
             sobel_thresh[x, y] = 255
 
 # save images
-cv2.imwrite('prewitt_thresh_' + filename, prewitt_thresh)
-cv2.imwrite('sobel_thresh_' + filename, sobel_thresh)
-cv2.imwrite('img_thresh_' + filename, img_thresh)
+cv2.imwrite('./results/prewitt_thresh_' + filename, prewitt_thresh)
+cv2.imwrite('./results/sobel_thresh_' + filename, sobel_thresh)
+cv2.imwrite('./results/img_thresh_' + filename, img_thresh)

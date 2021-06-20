@@ -120,12 +120,12 @@ for y in range(sobel_grad_img.shape[1]):
             sobel_thresh[x, y] = 255
 
 # save images
-cv2.imwrite('wavg_prewitt_x_' + filename, prewitt_x_img)
-cv2.imwrite('wavg_prewitt_y_' + filename, prewitt_y_img)
-cv2.imwrite('wavg_sobel_x_' + filename, sobel_x_img)
-cv2.imwrite('wavg_sobel_y_' + filename, sobel_y_img)
-cv2.imwrite('wavg_prewitt_grad_' + filename, prewitt_grad_img)
-cv2.imwrite('wavg_sobel_grad_' + filename, sobel_grad_img)
-cv2.imwrite('wavg_prewitt_thresh_' + filename, prewitt_thresh)
-cv2.imwrite('wavg_sobel_thresh_' + filename, sobel_thresh)
-cv2.imwrite('wavg_thresh_' + filename, wavg_thresh)
+cv2.imwrite('./results/wavg_prewitt_x_' + filename, prewitt_x_img)
+cv2.imwrite('./results/wavg_prewitt_y_' + filename, prewitt_y_img)
+cv2.imwrite('./results/wavg_sobel_x_' + filename, sobel_x_img)
+cv2.imwrite('./results/wavg_sobel_y_' + filename, sobel_y_img)
+cv2.imwrite('./results/wavg_prewitt_grad_' + filename, prewitt_grad_img)
+cv2.imwrite('./results/wavg_sobel_grad_' + filename, sobel_grad_img)
+cv2.imwrite('./results/wavg_prewitt_thresh_' + filename, prewitt_thresh)
+cv2.imwrite('./results/wavg_sobel_thresh_' + filename, sobel_thresh)
+cv2.imwrite('./results/wavg_thresh_' + filename, wavg_thresh)

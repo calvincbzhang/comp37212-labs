@@ -50,9 +50,9 @@ sobel_grad_img = np.sqrt(np.power(sobel_x_img, 2) + np.power(sobel_y_img, 2))
 sobel_grad_img = (sobel_grad_img / np.max(sobel_grad_img)) * 255
 
 # save images
-cv2.imwrite('prewitt_x_' + filename, prewitt_x_img)
-cv2.imwrite('prewitt_y_' + filename, prewitt_y_img)
-cv2.imwrite('sobel_x_' + filename, sobel_x_img)
-cv2.imwrite('sobel_y_' + filename, sobel_y_img)
-cv2.imwrite('prewitt_grad_' + filename, prewitt_grad_img)
-cv2.imwrite('sobel_grad_' + filename, sobel_grad_img)
+cv2.imwrite('./results/prewitt_x_' + filename, prewitt_x_img)
+cv2.imwrite('./results/prewitt_y_' + filename, prewitt_y_img)
+cv2.imwrite('./results/sobel_x_' + filename, sobel_x_img)
+cv2.imwrite('./results/sobel_y_' + filename, sobel_y_img)
+cv2.imwrite('./results/prewitt_grad_' + filename, prewitt_grad_img)
+cv2.imwrite('./results/sobel_grad_' + filename, sobel_grad_img)

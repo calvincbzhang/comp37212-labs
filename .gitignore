@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#########################################################################
+# Other things to ignore
+lab1/results
 lab2/results

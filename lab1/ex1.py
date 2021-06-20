@@ -47,5 +47,5 @@ avg_img = convolve(img, avg_kernel)
 wavg_img = convolve(img, wavg_kernel)
 
 # save images
-cv2.imwrite('avg_' + filename, avg_img)
-cv2.imwrite('wavg_' + filename, wavg_img)
+cv2.imwrite('./results/avg_' + filename, avg_img)
+cv2.imwrite('./results/wavg_' + filename, wavg_img)
